@@ -143,6 +143,91 @@
     #summaryObjectives {
       text-align: left;
     }
+
+
+    /* ================= MOBILE VERSION ================= */
+    @media (max-width: 768px) {
+
+      header h1 {
+        font-size: 1.4rem;
+      }
+
+      header p {
+        font-size: 0.9rem;
+      }
+
+      nav {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      nav a {
+        margin: 0 8px;
+        font-size: 0.9rem;
+        flex: 0 0 auto;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .card {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      label {
+        font-size: 0.95rem;
+      }
+
+      input[type="checkbox"] {
+        transform: scale(1.2);
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+      }
+
+      #objectiveSearch {
+        font-size: 1rem;
+      }
+
+      /* make summary easier to read on mobile */
+      #summaryContent p {
+        font-size: 0.95rem;
+      }
+    }
+
+
+    /* MOBILE ALWAYS-ON CONTROL */
+    #mobileControls {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 2000;
+    }
+
+    #mobileControls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      #mobileControls {
+        display: block;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -210,6 +295,12 @@
   <div id="objectives" class="page card">
     <h2>Objectives</h2>
     <button onclick="resetObjectives()">New Game (Reset)</button>
+
+    <!-- SEARCH BAR -->
+    <input type="text" id="objectiveSearch" placeholder="Search objectives..." oninput="filterObjectives()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:none; background:#1f2937; color:#e5e7eb;">
+
+    <div id="objectiveCounter" style="margin-bottom:10px; font-weight:bold;">Selected: 0 / 3</div>
+
     <div id="objectiveList"></div>
   </div>
 
@@ -234,6 +325,14 @@
 <footer>
   <p>© 2026 Phasmophobia Tracker</p>
 </footer>
+
+<!-- MOBILE SCREEN ALWAYS ON -->
+<div id="mobileControls">
+  <label>
+    <input type="checkbox" id="wakeToggle" onchange="toggleWakeLock(this)">
+    Screen Always On
+  </label>
+</div>
 
 <script>
   function showPage(pageId) {
@@ -271,33 +370,46 @@
     const container = document.getElementById('objectiveList');
     container.innerHTML = '';
 
-    objectives.forEach(obj => {
+    objectives.forEach(function(obj) {
       const label = document.createElement('label');
-      label.innerHTML = `<input type=\"checkbox\" onchange=\"syncObjectives()\"> <span>${obj}</span>`;
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.onchange = function() { handleObjectiveSelect(this); };
+
+      const span = document.createElement('span');
+      span.textContent = obj;
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
       container.appendChild(label);
     });
+
+    updateObjectiveCounter();
   }
 
   function renderSummaryObjectives() {
     const container = document.getElementById('summaryObjectives');
     container.innerHTML = '';
 
-    // capture ONLY selected objectives from main page
     const selected = Array.from(document.querySelectorAll('#objectiveList label'))
       .filter(label => label.querySelector('input').checked)
       .map(label => label.querySelector('span').textContent);
 
-    // independent summary state (NOT linked to main objectives)
-    window.summaryObjState = selected.map(text => ({ text, done: true }));
-
-    window.summaryObjState.forEach((obj, index) => {
+    selected.forEach(text => {
       const label = document.createElement('label');
-      label.classList.add('objDone');
 
-      label.innerHTML = `
-        <input type="checkbox" checked onchange="toggleSummaryObjective(${index}, this)">
-        <span>${obj.text}</span>
-      `;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = true;
+      checkbox.onchange = function() { toggleObjDone(this); };
+
+      const span = document.createElement('span');
+      span.textContent = text;
+
+      label.classList.add('objDone');
+      label.appendChild(checkbox);
+      label.appendChild(span);
 
       container.appendChild(label);
     });
@@ -305,17 +417,45 @@
 
   function toggleObjDone(cb) {
     const label = cb.parentElement;
-    if (cb.checked) {
-      label.classList.add('objDone');
-    } else {
-      label.classList.remove('objDone');
-    }
+    if (cb.checked) label.classList.add('objDone');
+    else label.classList.remove('objDone');
   }
-
-  function syncObjectives() {}
 
   function resetObjectives() {
     document.querySelectorAll('#objectiveList input').forEach(cb => cb.checked = false);
+    document.getElementById('objectiveSearch').value = '';
+    filterObjectives();
+    updateObjectiveCounter();
+  }
+
+  function filterObjectives() {
+    const search = document.getElementById('objectiveSearch').value.toLowerCase();
+    document.querySelectorAll('#objectiveList label').forEach(label => {
+      const text = label.textContent.toLowerCase();
+      label.style.display = text.includes(search) ? 'flex' : 'none';
+    });
+  }
+
+  function handleObjectiveSelect(cb) {
+    const checked = document.querySelectorAll('#objectiveList input:checked');
+    if (checked.length > 3) {
+      cb.checked = false;
+      return;
+    }
+    updateObjectiveCounter();
+  }
+
+  function updateObjectiveCounter() {
+    const count = document.querySelectorAll('#objectiveList input:checked').length;
+    const counter = document.getElementById('objectiveCounter');
+
+    counter.textContent = 'Selected: ' + count + ' / 3';
+
+    if (count === 3) {
+      counter.style.color = '#22c55e';
+    } else {
+      counter.style.color = '#e5e7eb';
+    }
   }
 
   const evidenceOptions = [
@@ -333,7 +473,22 @@
 
     evidenceOptions.forEach(ev => {
       const label = document.createElement('label');
-      label.innerHTML = `<input type=\"checkbox\"> <span>${ev}</span><button class=\"crossBtn\" onclick=\"toggleCross(this)\">✕</button>`;
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+
+      const span = document.createElement('span');
+      span.textContent = ev;
+
+      const btn = document.createElement('button');
+      btn.className = 'crossBtn';
+      btn.textContent = '✕';
+      btn.onclick = function() { toggleCross(btn); };
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      label.appendChild(btn);
+
       container.appendChild(label);
     });
   }
@@ -349,20 +504,77 @@
     const selectedHiding = Array.from(document.querySelectorAll('#hiding label input:checked'))
       .map(cb => cb.parentElement);
 
-    summary.innerHTML += `<h3>Hiding Spots Selected</h3>`;
+    summary.innerHTML += '<h3>Hiding Spots Selected</h3>';
 
     if (selectedHiding.length) {
       selectedHiding.forEach(label => {
-        const text = label.querySelector('span')?.textContent || '';
+        const text = label.querySelector('span') ? label.querySelector('span').textContent : '';
         const cls = label.classList.value;
-        summary.innerHTML += `<p class="${cls}"><span>${text}</span></p>`;
+
+        const p = document.createElement('p');
+        p.className = cls;
+
+        const span = document.createElement('span');
+        span.textContent = text;
+
+        p.appendChild(span);
+        summary.appendChild(p);
       });
     } else {
       summary.innerHTML += '<p>None selected</p>';
     }
   }
 
+  initWakeLock();
   renderObjectives();
+
+
+  // ================= WAKE LOCK =================
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        localStorage.setItem('wakeLock', 'on');
+      }
+    } catch (err) {
+      console.log('WakeLock error:', err);
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock !== null) {
+      wakeLock.release();
+      wakeLock = null;
+    }
+    localStorage.setItem('wakeLock', 'off');
+  }
+
+  function toggleWakeLock(cb) {
+    if (cb.checked) {
+      requestWakeLock();
+    } else {
+      releaseWakeLock();
+    }
+  }
+
+  function initWakeLock() {
+    const saved = localStorage.getItem('wakeLock');
+    const toggle = document.getElementById('wakeToggle');
+
+    if (saved === 'on') {
+      toggle.checked = true;
+      requestWakeLock();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    });
+  }
+
 </script>
 
 </body>
