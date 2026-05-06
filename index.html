@@ -317,6 +317,19 @@
       <div id="summaryObjectives"></div>
     </div>
 
+    <div class="card">
+      <h3>Hiding Spots</h3>
+
+      <select id="houseSelect" onchange="renderSummaryHiding()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:none; background:#1f2937; color:#e5e7eb;">
+        <option value="tanglewood">6 Tanglewood Drive</option>
+        <option value="edgefield">42 Edgefield Road</option>
+        <option value="ridgeview">10 Ridgeview Court</option>
+        <option value="willow">13 Willow Street</option>
+      </select>
+
+      <div id="summaryHidingList"></div>
+    </div>
+
     <div id="summaryContent"></div>
   </div>
 
@@ -572,6 +585,54 @@
       if (wakeLock !== null && document.visibilityState === 'visible') {
         requestWakeLock();
       }
+    });
+  }
+
+
+
+  // ================= HIDE SPOTS DATA =================
+  const hidingSpots = {
+    tanglewood: [
+      "Front Room Closet",
+      "Front Side Hallway Closet",
+      "Main Bedroom Ensuite Closet",
+      "Main Hallway Closet"
+    ],
+    edgefield: ["(Add spots)"],
+    ridgeview: ["(Add spots)"],
+    willow: ["(Add spots)"]
+  };
+
+  function renderSummaryHiding() {
+    const house = document.getElementById('houseSelect').value;
+    const container = document.getElementById('summaryHidingList');
+    container.innerHTML = '';
+
+    hidingSpots[house].forEach(spot => {
+      const label = document.createElement('label');
+      label.style.display = 'flex';
+      label.style.alignItems = 'center';
+      label.style.justifyContent = 'flex-start';
+      label.style.gap = '10px';
+      label.style.margin = '5px 0';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+
+      const span = document.createElement('span');
+      span.textContent = spot;
+
+      cb.onchange = function() {
+        if (cb.checked) {
+          span.style.fontWeight = 'bold';
+        } else {
+          span.style.fontWeight = 'normal';
+        }
+      };
+
+      label.appendChild(cb);
+      label.appendChild(span);
+      container.appendChild(label);
     });
   }
 
