@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phasmophobia Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    header {
+      background: #020617;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #1f2933;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #111827;
+      padding: 0.75rem;
+      text-align: center;
+      border-bottom: 1px solid #1f2933;
+    }
+
+    nav a {
+      color: #e5e7eb;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      background: #1f2937;
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .card {
+      background: #111827;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+
+    .page { display: none; }
+    .active { display: block; }
+
+    button {
+      background: #1f2937;
+      color: #e5e7eb;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #374151;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 6px 0;
+      gap: 10px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .crossed {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    .crossBtn {
+      background: transparent;
+      border: 1px solid #374151;
+      color: #e5e7eb;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .crossBtn:hover {
+      background: #374151;
+    }
+
+    /* hiding spot colours */
+    .hs1 span { color: #22c55e; }
+    .hs2 span { color: #3b82f6; }
+    .hs3 span { color: #f59e0b; }
+    .hs4 span { color: #ef4444; }
+    .hs5 span { color: #a855f7; }
+    .hs6 span { color: #06b6d4; }
+    .hs7 span { color: #f97316; }
+    .hs8 span { color: #ec4899; }
+
+    /* objectives done state */
+    .objDone {
+      color: #22c55e;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #020617;
+      margin-top: 2rem;
+      border-top: 1px solid #1f2933;
+    }
+  
+    /* ensure summary layout not affected */
+    #summary label {
+      justify-content: space-between;
+    }
+
+    /* FIX: summary objectives left alignment */
+    #summaryObjectives label {
+      justify-content: flex-start !important;
+    }
+
+    #summaryObjectives span {
+      text-align: left;
+    }
+
+    #summaryObjectives {
+      text-align: left;
+    }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Phasmophobia Tracker</h1>
+  <p>Track evidence, hiding spots, and objectives</p>
+</header>
+
+<nav>
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('hiding')">Hiding Spots</a>
+  <a onclick="showPage('evidence')">Evidence</a>
+  <a onclick="showPage('objectives')">Objectives</a>
+  <a onclick="showPage('summary')">Summary</a>
+</nav>
+
+<div class="container">
+
+  <div id="home" class="page active card">
+    <h2>Welcome</h2>
+    <p>This tool helps you track investigations in Phasmophobia including evidence, hiding spots, objectives, and a full run summary.</p>
+  </div>
+
+  <div id="hiding" class="page card">
+    <h2>Hiding Spots</h2>
+
+    <div class="card">
+      <h3>6 Tanglewood Drive</h3>
+      <label class="hs1"><input type="checkbox"> <span>Front Room Closet</span></label>
+      <label class="hs2"><input type="checkbox"> <span>Front Side Hallway Closet</span></label>
+      <label class="hs3"><input type="checkbox"> <span>Main Bedroom Ensuite Closet</span></label>
+      <label class="hs4"><input type="checkbox"> <span>Main Hallway Closet</span></label>
+    </div>
+
+    <div class="card">
+      <h3>42 Edgefield Road</h3>
+      <label class="hs5"><input type="checkbox"> <span>(Add spot here)</span></label>
+      <label class="hs6"><input type="checkbox"> <span>(Add spot here)</span></label>
+      <label class="hs7"><input type="checkbox"> <span>(Add spot here)</span></label>
+    </div>
+
+    <div class="card">
+      <h3>10 Ridgeview Court</h3>
+      <label class="hs8"><input type="checkbox"> <span>(Add spot here)</span></label>
+    </div>
+
+    <div class="card">
+      <h3>13 Willow Street</h3>
+      <label class="hs1"><input type="checkbox"> <span>(Add spot here)</span></label>
+      <label class="hs2"><input type="checkbox"> <span>(Add spot here)</span></label>
+    </div>
+  </div>
+
+  <div id="evidence" class="page card">
+    <h2>Evidence</h2>
+    <label><input type="checkbox"> EMF Level 5</label>
+    <label><input type="checkbox"> Spirit Box</label>
+    <label><input type="checkbox"> Ghost Writing</label>
+    <label><input type="checkbox"> Freezing Temps</label>
+    <label><input type="checkbox"> Fingerprints</label>
+    <label><input type="checkbox"> D.O.T.S Projector</label>
+  </div>
+
+  <div id="objectives" class="page card">
+    <h2>Objectives</h2>
+    <button onclick="resetObjectives()">New Game (Reset)</button>
+    <div id="objectiveList"></div>
+  </div>
+
+  <div id="summary" class="page card">
+    <h2>Summary</h2>
+
+    <div class="card">
+      <h3>Evidence</h3>
+      <div id="evidenceSummary"></div>
+    </div>
+
+    <div class="card">
+      <h3>Objectives</h3>
+      <div id="summaryObjectives"></div>
+    </div>
+
+    <div id="summaryContent"></div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Phasmophobia Tracker</p>
+</footer>
+
+<script>
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+
+    if (pageId === 'summary') {
+      buildSummary();
+      renderEvidenceSummary();
+      renderSummaryObjectives();
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  const objectives = [
+    "Capture a photo of the ghost",
+    "Capture a video of a Ghost",
+    "Capture 2 unique paranormal sounds with a Sound Recorder",
+    "Capture 3 unique photos with a Photo Camera",
+    "Capture 3 unique videos with a Video Camera",
+    "Cleanse the area near the ghost using incense",
+    "Detect a ghost presence with a motion sensor",
+    "Capture a Photo of an EMF reading on an EMF Reader",
+    "Get a ghost to blow out a firelight",
+    "Get an average sanity below 25%",
+    "Have a member of your team escape the ghost during a hunt",
+    "Have a member of your team witness a ghost event",
+    "Prevent the ghost from hunting with a crucifix",
+    "Repel the ghost with a smudge stick while its chasing someone",
+    "Detect paranormal sound with a parabolic microphone"
+  ];
+
+  function renderObjectives() {
+    const container = document.getElementById('objectiveList');
+    container.innerHTML = '';
+
+    objectives.forEach(obj => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type=\"checkbox\" onchange=\"syncObjectives()\"> <span>${obj}</span>`;
+      container.appendChild(label);
+    });
+  }
+
+  function renderSummaryObjectives() {
+    const container = document.getElementById('summaryObjectives');
+    container.innerHTML = '';
+
+    // capture ONLY selected objectives from main page
+    const selected = Array.from(document.querySelectorAll('#objectiveList label'))
+      .filter(label => label.querySelector('input').checked)
+      .map(label => label.querySelector('span').textContent);
+
+    // independent summary state (NOT linked to main objectives)
+    window.summaryObjState = selected.map(text => ({ text, done: true }));
+
+    window.summaryObjState.forEach((obj, index) => {
+      const label = document.createElement('label');
+      label.classList.add('objDone');
+
+      label.innerHTML = `
+        <input type="checkbox" checked onchange="toggleSummaryObjective(${index}, this)">
+        <span>${obj.text}</span>
+      `;
+
+      container.appendChild(label);
+    });
+  }
+
+  function toggleObjDone(cb) {
+    const label = cb.parentElement;
+    if (cb.checked) {
+      label.classList.add('objDone');
+    } else {
+      label.classList.remove('objDone');
+    }
+  }
+
+  function syncObjectives() {}
+
+  function resetObjectives() {
+    document.querySelectorAll('#objectiveList input').forEach(cb => cb.checked = false);
+  }
+
+  const evidenceOptions = [
+    "EMF Level 5",
+    "Spirit Box",
+    "Ghost Writing",
+    "Freezing Temps",
+    "Fingerprints",
+    "D.O.T.S Projector"
+  ];
+
+  function renderEvidenceSummary() {
+    const container = document.getElementById('evidenceSummary');
+    container.innerHTML = '';
+
+    evidenceOptions.forEach(ev => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type=\"checkbox\"> <span>${ev}</span><button class=\"crossBtn\" onclick=\"toggleCross(this)\">✕</button>`;
+      container.appendChild(label);
+    });
+  }
+
+  function toggleCross(btn) {
+    btn.parentElement.querySelector('span').classList.toggle('crossed');
+  }
+
+  function buildSummary() {
+    const summary = document.getElementById('summaryContent');
+    summary.innerHTML = '';
+
+    const selectedHiding = Array.from(document.querySelectorAll('#hiding label input:checked'))
+      .map(cb => cb.parentElement);
+
+    summary.innerHTML += `<h3>Hiding Spots Selected</h3>`;
+
+    if (selectedHiding.length) {
+      selectedHiding.forEach(label => {
+        const text = label.querySelector('span')?.textContent || '';
+        const cls = label.classList.value;
+        summary.innerHTML += `<p class="${cls}"><span>${text}</span></p>`;
+      });
+    } else {
+      summary.innerHTML += '<p>None selected</p>';
+    }
+  }
+
+  renderObjectives();
+</script>
+
+</body>
+</html>
