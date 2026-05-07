@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Phasmophobia Tracker</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #0f172a;
       color: #e5e7eb;
+      overflow-x: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     header {
@@ -19,70 +25,77 @@
       border-bottom: 1px solid #1f2933;
     }
 
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: #111827;
-      padding: 0.75rem;
-      text-align: center;
-      border-bottom: 1px solid #1f2933;
-    }
-
-    nav a {
-      color: #e5e7eb;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    nav a:hover {
-      background: #1f2937;
-    }
-
     .container {
-      padding: 2rem;
       max-width: 900px;
       margin: auto;
+      padding: 1rem;
     }
 
     .card {
       background: #111827;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
-    .page { display: none; }
-    .active { display: block; }
-
-    button {
-      background: #1f2937;
-      color: #e5e7eb;
-      border: none;
-      padding: 10px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    button:hover {
-      background: #374151;
+    h2, h3 {
+      margin-top: 0;
     }
 
     label {
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      margin: 6px 0;
       gap: 10px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: 0.2s;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      min-height: 48px;
+      word-break: break-word;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      flex-shrink: 0;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #1f2937;
+      color: #e5e7eb;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #1f2937;
+      color: #e5e7eb;
+      border: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #374151;
+    }
+
+    .crossBtn {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid #374151;
+      padding: 4px 10px;
+      width: auto;
+      min-width: 40px;
     }
 
     .crossed {
@@ -90,17 +103,9 @@
       opacity: 0.5;
     }
 
-    .crossBtn {
-      background: transparent;
-      border: 1px solid #374151;
-      color: #e5e7eb;
-      padding: 2px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .crossBtn:hover {
-      background: #374151;
+    .objDone span {
+      color: #22c55e;
+      font-weight: bold;
     }
 
     /* hiding spot colours */
@@ -113,224 +118,100 @@
     .hs7 span { color: #f97316; }
     .hs8 span { color: #ec4899; }
 
-    /* objectives done state */
-    .objDone {
-      color: #22c55e;
+    #objectiveCounter {
+      font-weight: bold;
+      margin: 10px 0;
     }
 
     footer {
       text-align: center;
       padding: 1rem;
       background: #020617;
-      margin-top: 2rem;
       border-top: 1px solid #1f2933;
-    }
-  
-    /* ensure summary layout not affected */
-    #summary label {
-      justify-content: space-between;
+      margin-top: 2rem;
     }
 
-    /* FIX: summary objectives left alignment */
-    #summaryObjectives label {
-      justify-content: flex-start !important;
-    }
-
-    #summaryObjectives span {
-      text-align: left;
-    }
-
-    #summaryObjectives {
-      text-align: left;
-    }
-
-
-    /* ================= MOBILE VERSION ================= */
+    /* MOBILE */
     @media (max-width: 768px) {
-
-      header h1 {
-        font-size: 1.4rem;
-      }
-
-      header p {
-        font-size: 0.9rem;
-      }
-
-      nav {
-        display: flex;
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-
-      nav a {
-        margin: 0 8px;
-        font-size: 0.9rem;
-        flex: 0 0 auto;
-      }
-
       .container {
-        padding: 1rem;
+        padding: 0.75rem;
       }
 
       .card {
         padding: 1rem;
-        margin: 1rem 0;
       }
 
       label {
         font-size: 0.95rem;
-      }
-
-      input[type="checkbox"] {
-        transform: scale(1.2);
+        align-items: flex-start;
       }
 
       button {
-        width: 100%;
-        padding: 12px;
-      }
-
-      #objectiveSearch {
-        font-size: 1rem;
-      }
-
-      /* make summary easier to read on mobile */
-      #summaryContent p {
-        font-size: 0.95rem;
+        font-size: 15px;
       }
     }
 
+    /* SMALL PHONES */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4rem;
+      }
 
-    /* MOBILE ALWAYS-ON CONTROL */
-    #mobileControls {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111827;
-      padding: 10px 14px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      display: none;
-      z-index: 2000;
-    }
+      h2 {
+        font-size: 1.2rem;
+      }
 
-    #mobileControls label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      #mobileControls {
-        display: block;
+      label {
+        font-size: 0.9rem;
       }
     }
-
-</style>
+  </style>
 </head>
+
 <body>
 
 <header>
   <h1>Phasmophobia Tracker</h1>
-  <p>Track evidence, hiding spots, and objectives</p>
+  <p>Track evidence, objectives, and hiding spots</p>
 </header>
-
-<nav>
-  <a onclick="showPage('home')">Home</a>
-  <a onclick="showPage('hiding')">Hiding Spots</a>
-  <a onclick="showPage('evidence')">Evidence</a>
-  <a onclick="showPage('objectives')">Objectives</a>
-  <a onclick="showPage('summary')">Summary</a>
-</nav>
 
 <div class="container">
 
-  <div id="home" class="page active card">
-    <h2>Welcome</h2>
-    <p>This tool helps you track investigations in Phasmophobia including evidence, hiding spots, objectives, and a full run summary.</p>
-  </div>
-
-  <div id="hiding" class="page card">
-    <h2>Hiding Spots</h2>
-
-    <div class="card">
-      <h3>6 Tanglewood Drive</h3>
-      <label class="hs1"><input type="checkbox"> <span>Front Room Closet</span></label>
-      <label class="hs2"><input type="checkbox"> <span>Front Side Hallway Closet</span></label>
-      <label class="hs3"><input type="checkbox"> <span>Main Bedroom Ensuite Closet</span></label>
-      <label class="hs4"><input type="checkbox"> <span>Main Hallway Closet</span></label>
-    </div>
-
-    <div class="card">
-      <h3>42 Edgefield Road</h3>
-      <label class="hs5"><input type="checkbox"> <span>(Add spot here)</span></label>
-      <label class="hs6"><input type="checkbox"> <span>(Add spot here)</span></label>
-      <label class="hs7"><input type="checkbox"> <span>(Add spot here)</span></label>
-    </div>
-
-    <div class="card">
-      <h3>10 Ridgeview Court</h3>
-      <label class="hs8"><input type="checkbox"> <span>(Add spot here)</span></label>
-    </div>
-
-    <div class="card">
-      <h3>13 Willow Street</h3>
-      <label class="hs1"><input type="checkbox"> <span>(Add spot here)</span></label>
-      <label class="hs2"><input type="checkbox"> <span>(Add spot here)</span></label>
-    </div>
-  </div>
-
-  <div id="evidence" class="page card">
-    <h2>Evidence</h2>
-    <label><input type="checkbox"> EMF Level 5</label>
-    <label><input type="checkbox"> Spirit Box</label>
-    <label><input type="checkbox"> Ghost Writing</label>
-    <label><input type="checkbox"> Freezing Temps</label>
-    <label><input type="checkbox"> Fingerprints</label>
-    <label><input type="checkbox"> D.O.T.S Projector</label>
-  </div>
-
-  <div id="objectives" class="page card">
+  <!-- OBJECTIVES -->
+  <div class="card">
     <h2>Objectives</h2>
+
     <button onclick="resetObjectives()">New Game (Reset)</button>
 
-    <!-- SEARCH BAR -->
-    <input type="text" id="objectiveSearch" placeholder="Search objectives..." oninput="filterObjectives()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:none; background:#1f2937; color:#e5e7eb;">
+    <input
+      type="text"
+      id="objectiveSearch"
+      placeholder="Search objectives..."
+      oninput="filterObjectives()"
+    >
 
-    <div id="objectiveCounter" style="margin-bottom:10px; font-weight:bold;">Selected: 0 / 3</div>
-
+    <div id="objectiveCounter">Selected: 0 / 3</div>
     <div id="objectiveList"></div>
   </div>
 
-  <div id="summary" class="page card">
-    <h2>Summary</h2>
+  <!-- HIDING SPOTS -->
+  <div class="card">
+    <h2>Hiding Spots</h2>
 
-    <div class="card">
-      <h3>Evidence</h3>
-      <div id="evidenceSummary"></div>
-    </div>
+    <select id="houseSelect" onchange="renderHidingSpots()">
+      <option value="tanglewood">6 Tanglewood Drive</option>
+      <option value="edgefield">42 Edgefield Road</option>
+      <option value="ridgeview">10 Ridgeview Court</option>
+      <option value="willow">13 Willow Street</option>
+    </select>
 
-    <div class="card">
-      <h3>Objectives</h3>
-      <div id="summaryObjectives"></div>
-    </div>
+    <div id="hidingSpotList"></div>
+  </div>
 
-    <div class="card">
-      <h3>Hiding Spots</h3>
-
-      <select id="houseSelect" onchange="renderSummaryHiding()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:none; background:#1f2937; color:#e5e7eb;">
-        <option value="tanglewood">6 Tanglewood Drive</option>
-        <option value="edgefield">42 Edgefield Road</option>
-        <option value="ridgeview">10 Ridgeview Court</option>
-        <option value="willow">13 Willow Street</option>
-      </select>
-
-      <div id="summaryHidingList"></div>
-    </div>
-
-    <div id="summaryContent"></div>
+  <!-- EVIDENCE -->
+  <div class="card">
+    <h2>Evidence</h2>
+    <div id="evidenceList"></div>
   </div>
 
 </div>
@@ -339,26 +220,41 @@
   <p>© 2026 Phasmophobia Tracker</p>
 </footer>
 
-<!-- MOBILE SCREEN ALWAYS ON -->
-<div id="mobileControls">
-  <label>
-    <input type="checkbox" id="wakeToggle" onchange="toggleWakeLock(this)">
-    Screen Always On
-  </label>
-</div>
-
 <script>
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+  const evidence = [
+    "EMF Level 5",
+    "Spirit Box",
+    "Ghost Writing",
+    "Freezing Temps",
+    "Fingerprints",
+    "D.O.T.S Projector"
+  ];
 
-    if (pageId === 'summary') {
-      buildSummary();
-      renderEvidenceSummary();
-      renderSummaryObjectives();
-    }
+  function renderEvidence() {
+    const container = document.getElementById('evidenceList');
+    container.innerHTML = '';
 
-    window.scrollTo(0, 0);
+    evidence.forEach(item => {
+      const label = document.createElement('label');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+
+      const span = document.createElement('span');
+      span.textContent = item;
+
+      const crossBtn = document.createElement('button');
+      crossBtn.className = 'crossBtn';
+      crossBtn.textContent = '✕';
+
+      crossBtn.onclick = () => span.classList.toggle('crossed');
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      label.appendChild(crossBtn);
+
+      container.appendChild(label);
+    });
   }
 
   const objectives = [
@@ -383,12 +279,15 @@
     const container = document.getElementById('objectiveList');
     container.innerHTML = '';
 
-    objectives.forEach(function(obj) {
+    objectives.forEach(obj => {
       const label = document.createElement('label');
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.onchange = function() { handleObjectiveSelect(this); };
+
+      checkbox.onchange = function () {
+        handleObjectiveSelection(this, label);
+      };
 
       const span = document.createElement('span');
       span.textContent = obj;
@@ -401,60 +300,27 @@
     updateObjectiveCounter();
   }
 
-  function renderSummaryObjectives() {
-    const container = document.getElementById('summaryObjectives');
-    container.innerHTML = '';
-
-    const selected = Array.from(document.querySelectorAll('#objectiveList label'))
-      .filter(label => label.querySelector('input').checked)
-      .map(label => label.querySelector('span').textContent);
-
-    selected.forEach(text => {
-      const label = document.createElement('label');
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = true;
-      checkbox.onchange = function() { toggleObjDone(this); };
-
-      const span = document.createElement('span');
-      span.textContent = text;
-
-      label.classList.add('objDone');
-      label.appendChild(checkbox);
-      label.appendChild(span);
-
-      container.appendChild(label);
-    });
-  }
-
-  function toggleObjDone(cb) {
-    const label = cb.parentElement;
-    if (cb.checked) label.classList.add('objDone');
-    else label.classList.remove('objDone');
-  }
-
-  function resetObjectives() {
-    document.querySelectorAll('#objectiveList input').forEach(cb => cb.checked = false);
-    document.getElementById('objectiveSearch').value = '';
-    filterObjectives();
-    updateObjectiveCounter();
-  }
-
-  function filterObjectives() {
-    const search = document.getElementById('objectiveSearch').value.toLowerCase();
-    document.querySelectorAll('#objectiveList label').forEach(label => {
-      const text = label.textContent.toLowerCase();
-      label.style.display = text.includes(search) ? 'flex' : 'none';
-    });
-  }
-
-  function handleObjectiveSelect(cb) {
+  function handleObjectiveSelection(cb, label) {
     const checked = document.querySelectorAll('#objectiveList input:checked');
+
     if (checked.length > 3) {
       cb.checked = false;
       return;
     }
+
+    if (cb.checked) label.classList.add('objDone');
+    else label.classList.remove('objDone');
+
+    document.querySelectorAll('#objectiveList label').forEach(lbl => {
+      const checkbox = lbl.querySelector('input');
+
+      if (checked.length === 3 && !checkbox.checked) {
+        lbl.style.display = 'none';
+      } else {
+        lbl.style.display = 'flex';
+      }
+    });
+
     updateObjectiveCounter();
   }
 
@@ -462,180 +328,96 @@
     const count = document.querySelectorAll('#objectiveList input:checked').length;
     const counter = document.getElementById('objectiveCounter');
 
-    counter.textContent = 'Selected: ' + count + ' / 3';
-
-    if (count === 3) {
-      counter.style.color = '#22c55e';
-    } else {
-      counter.style.color = '#e5e7eb';
-    }
+    counter.textContent = `Selected: ${count} / 3`;
+    counter.style.color = count === 3 ? '#22c55e' : '#e5e7eb';
   }
 
-  const evidenceOptions = [
-    "EMF Level 5",
-    "Spirit Box",
-    "Ghost Writing",
-    "Freezing Temps",
-    "Fingerprints",
-    "D.O.T.S Projector"
-  ];
+  function filterObjectives() {
+    const search = document.getElementById('objectiveSearch').value.toLowerCase();
 
-  function renderEvidenceSummary() {
-    const container = document.getElementById('evidenceSummary');
+    document.querySelectorAll('#objectiveList label').forEach(label => {
+      const checkbox = label.querySelector('input');
+      const text = label.textContent.toLowerCase();
+
+      if (checkbox.checked) {
+        label.style.display = 'flex';
+        return;
+      }
+
+      const checkedCount = document.querySelectorAll('#objectiveList input:checked').length;
+
+      if (checkedCount === 3) {
+        label.style.display = 'none';
+      } else {
+        label.style.display = text.includes(search) ? 'flex' : 'none';
+      }
+    });
+  }
+
+  function resetObjectives() {
+    document.querySelectorAll('#objectiveList input').forEach(cb => cb.checked = false);
+
+    document.querySelectorAll('#objectiveList label').forEach(label => {
+      label.classList.remove('objDone');
+      label.style.display = 'flex';
+    });
+
+    document.getElementById('objectiveSearch').value = '';
+
+    updateObjectiveCounter();
+  }
+
+  const hidingSpots = {
+    tanglewood: [
+      { text: "Front Room Closet", cls: "hs1" },
+      { text: "Front Side Hallway Closet", cls: "hs2" },
+      { text: "Main Bedroom Ensuite Closet", cls: "hs3" },
+      { text: "Main Hallway Closet", cls: "hs4" },
+      { text: "Garage Lockers", cls: "hs5" }
+    ],
+    edgefield: [
+      { text: "(Add spot here)", cls: "hs5" },
+      { text: "(Add spot here)", cls: "hs6" },
+      { text: "(Add spot here)", cls: "hs7" }
+    ],
+    ridgeview: [
+      { text: "(Add spot here)", cls: "hs8" }
+    ],
+    willow: [
+      { text: "(Add spot here)", cls: "hs1" },
+      { text: "(Add spot here)", cls: "hs2" }
+    ]
+  };
+
+  function renderHidingSpots() {
+    const house = document.getElementById('houseSelect').value;
+    const container = document.getElementById('hidingSpotList');
+
     container.innerHTML = '';
 
-    evidenceOptions.forEach(ev => {
+    hidingSpots[house].forEach(spot => {
       const label = document.createElement('label');
+      label.className = spot.cls;
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
 
       const span = document.createElement('span');
-      span.textContent = ev;
+      span.textContent = spot.text;
 
-      const btn = document.createElement('button');
-      btn.className = 'crossBtn';
-      btn.textContent = '✕';
-      btn.onclick = function() { toggleCross(btn); };
+      checkbox.onchange = () => {
+        span.style.fontWeight = checkbox.checked ? 'bold' : 'normal';
+      };
 
       label.appendChild(checkbox);
       label.appendChild(span);
-      label.appendChild(btn);
-
       container.appendChild(label);
     });
   }
 
-  function toggleCross(btn) {
-    btn.parentElement.querySelector('span').classList.toggle('crossed');
-  }
-
-  function buildSummary() {
-    const summary = document.getElementById('summaryContent');
-    summary.innerHTML = '';
-
-    const selectedHiding = Array.from(document.querySelectorAll('#hiding label input:checked'))
-      .map(cb => cb.parentElement);
-
-    summary.innerHTML += '<h3>Hiding Spots Selected</h3>';
-
-    if (selectedHiding.length) {
-      selectedHiding.forEach(label => {
-        const text = label.querySelector('span') ? label.querySelector('span').textContent : '';
-        const cls = label.classList.value;
-
-        const p = document.createElement('p');
-        p.className = cls;
-
-        const span = document.createElement('span');
-        span.textContent = text;
-
-        p.appendChild(span);
-        summary.appendChild(p);
-      });
-    } else {
-      summary.innerHTML += '<p>None selected</p>';
-    }
-  }
-
-  initWakeLock();
+  renderEvidence();
   renderObjectives();
-
-
-  // ================= WAKE LOCK =================
-  let wakeLock = null;
-
-  async function requestWakeLock() {
-    try {
-      if ('wakeLock' in navigator) {
-        wakeLock = await navigator.wakeLock.request('screen');
-        localStorage.setItem('wakeLock', 'on');
-      }
-    } catch (err) {
-      console.log('WakeLock error:', err);
-    }
-  }
-
-  function releaseWakeLock() {
-    if (wakeLock !== null) {
-      wakeLock.release();
-      wakeLock = null;
-    }
-    localStorage.setItem('wakeLock', 'off');
-  }
-
-  function toggleWakeLock(cb) {
-    if (cb.checked) {
-      requestWakeLock();
-    } else {
-      releaseWakeLock();
-    }
-  }
-
-  function initWakeLock() {
-    const saved = localStorage.getItem('wakeLock');
-    const toggle = document.getElementById('wakeToggle');
-
-    if (saved === 'on') {
-      toggle.checked = true;
-      requestWakeLock();
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLock !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
-  }
-
-
-
-  // ================= HIDE SPOTS DATA =================
-  const hidingSpots = {
-    tanglewood: [
-      "Front Room Closet",
-      "Front Side Hallway Closet",
-      "Main Bedroom Ensuite Closet",
-      "Main Hallway Closet"
-    ],
-    edgefield: ["(Add spots)"],
-    ridgeview: ["(Add spots)"],
-    willow: ["(Add spots)"]
-  };
-
-  function renderSummaryHiding() {
-    const house = document.getElementById('houseSelect').value;
-    const container = document.getElementById('summaryHidingList');
-    container.innerHTML = '';
-
-    hidingSpots[house].forEach(spot => {
-      const label = document.createElement('label');
-      label.style.display = 'flex';
-      label.style.alignItems = 'center';
-      label.style.justifyContent = 'flex-start';
-      label.style.gap = '10px';
-      label.style.margin = '5px 0';
-
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-
-      const span = document.createElement('span');
-      span.textContent = spot;
-
-      cb.onchange = function() {
-        if (cb.checked) {
-          span.style.fontWeight = 'bold';
-        } else {
-          span.style.fontWeight = 'normal';
-        }
-      };
-
-      label.appendChild(cb);
-      label.appendChild(span);
-      container.appendChild(label);
-    });
-  }
-
+  renderHidingSpots();
 </script>
 
 </body>
