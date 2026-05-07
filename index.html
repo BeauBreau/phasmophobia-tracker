@@ -38,7 +38,9 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
-    h2 { margin-top: 0; }
+    h2 {
+      margin-top: 0;
+    }
 
     label {
       display: flex;
@@ -54,7 +56,8 @@
       transform: scale(1.2);
     }
 
-    input[type="text"], select {
+    input[type="text"],
+    select {
       width: 100%;
       padding: 12px;
       background: #1f2937;
@@ -78,6 +81,15 @@
 
     button:hover {
       background: #374151;
+    }
+
+    /* 🔴 RESET BUTTON */
+    .resetBtn {
+    background: #991b1b;
+    }
+
+    .resetBtn:hover {
+    background: #7f1d1d;
     }
 
     .crossBtn {
@@ -167,9 +179,16 @@
   <div class="card">
     <h2>Objectives</h2>
 
-    <button onclick="resetObjectives()">New Game (Reset)</button>
+    <button class="resetBtn" onclick="resetObjectives()">
+      New Game (Reset)
+    </button>
 
-    <input type="text" id="objectiveSearch" placeholder="Search objectives..." oninput="filterObjectives()">
+    <input
+      type="text"
+      id="objectiveSearch"
+      placeholder="Search objectives..."
+      oninput="filterObjectives()"
+    >
 
     <div id="objectiveCounter">Selected: 0 / 3</div>
     <div id="objectiveList"></div>
@@ -255,7 +274,7 @@
     }
   });
 
-  // ================= EXISTING LOGIC =================
+  // ================= EVIDENCE =================
 
   const evidence = [
     "EMF Level 5",
@@ -292,6 +311,8 @@
       container.appendChild(label);
     });
   }
+
+  // ================= OBJECTIVES =================
 
   const objectives = [
     "Capture a photo of the ghost",
@@ -330,6 +351,7 @@
 
       label.appendChild(checkbox);
       label.appendChild(span);
+
       container.appendChild(label);
     });
 
@@ -344,28 +366,41 @@
       return;
     }
 
-    cb.checked ? label.classList.add('objDone') : label.classList.remove('objDone');
+    cb.checked
+      ? label.classList.add('objDone')
+      : label.classList.remove('objDone');
 
     document.querySelectorAll('#objectiveList label').forEach(lbl => {
       const box = lbl.querySelector('input');
 
       lbl.style.display =
-        (checked.length === 3 && !box.checked) ? 'none' : 'flex';
+        (checked.length === 3 && !box.checked)
+          ? 'none'
+          : 'flex';
     });
 
     updateObjectiveCounter();
   }
 
   function updateObjectiveCounter() {
-    const count = document.querySelectorAll('#objectiveList input:checked').length;
+    const count =
+      document.querySelectorAll('#objectiveList input:checked').length;
+
     const counter = document.getElementById('objectiveCounter');
 
     counter.textContent = `Selected: ${count} / 3`;
-    counter.style.color = count === 3 ? '#22c55e' : '#e5e7eb';
+
+    counter.style.color =
+      count === 3
+        ? '#22c55e'
+        : '#e5e7eb';
   }
 
   function filterObjectives() {
-    const search = document.getElementById('objectiveSearch').value.toLowerCase();
+    const search =
+      document.getElementById('objectiveSearch')
+      .value
+      .toLowerCase();
 
     document.querySelectorAll('#objectiveList label').forEach(label => {
       const box = label.querySelector('input');
@@ -376,24 +411,34 @@
         return;
       }
 
-      const checkedCount = document.querySelectorAll('#objectiveList input:checked').length;
+      const checkedCount =
+        document.querySelectorAll('#objectiveList input:checked').length;
 
       label.style.display =
-        checkedCount === 3 ? 'none' : (text.includes(search) ? 'flex' : 'none');
+        checkedCount === 3
+          ? 'none'
+          : (text.includes(search)
+            ? 'flex'
+            : 'none');
     });
   }
 
   function resetObjectives() {
-    document.querySelectorAll('#objectiveList input').forEach(cb => cb.checked = false);
+    document.querySelectorAll('#objectiveList input')
+      .forEach(cb => cb.checked = false);
 
-    document.querySelectorAll('#objectiveList label').forEach(label => {
-      label.classList.remove('objDone');
-      label.style.display = 'flex';
-    });
+    document.querySelectorAll('#objectiveList label')
+      .forEach(label => {
+        label.classList.remove('objDone');
+        label.style.display = 'flex';
+      });
 
     document.getElementById('objectiveSearch').value = '';
+
     updateObjectiveCounter();
   }
+
+  // ================= HIDING SPOTS =================
 
   const hidingSpots = {
     tanglewood: [
@@ -403,14 +448,17 @@
       { text: "Main Hallway Closet", cls: "hs4" },
       { text: "Garage Lockers", cls: "hs5" }
     ],
+
     edgefield: [
       { text: "(Add spot here)", cls: "hs5" },
       { text: "(Add spot here)", cls: "hs6" },
       { text: "(Add spot here)", cls: "hs7" }
     ],
+
     ridgeview: [
       { text: "(Add spot here)", cls: "hs8" }
     ],
+
     willow: [
       { text: "(Add spot here)", cls: "hs1" },
       { text: "(Add spot here)", cls: "hs2" }
@@ -418,12 +466,16 @@
   };
 
   function renderHidingSpots() {
-    const house = document.getElementById('houseSelect').value;
-    const container = document.getElementById('hidingSpotList');
+    const house =
+      document.getElementById('houseSelect').value;
+
+    const container =
+      document.getElementById('hidingSpotList');
 
     container.innerHTML = '';
 
     hidingSpots[house].forEach(spot => {
+
       const label = document.createElement('label');
       label.className = spot.cls;
 
@@ -434,14 +486,20 @@
       span.textContent = spot.text;
 
       checkbox.onchange = () => {
-        span.style.fontWeight = checkbox.checked ? 'bold' : 'normal';
+        span.style.fontWeight =
+          checkbox.checked
+            ? 'bold'
+            : 'normal';
       };
 
       label.appendChild(checkbox);
       label.appendChild(span);
+
       container.appendChild(label);
     });
   }
+
+  // ================= INIT =================
 
   renderEvidence();
   renderObjectives();
