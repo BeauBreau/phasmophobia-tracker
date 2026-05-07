@@ -14,9 +14,7 @@
       overflow-x: hidden;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     header {
       background: #020617;
@@ -29,6 +27,7 @@
       max-width: 900px;
       margin: auto;
       padding: 1rem;
+      padding-bottom: 90px;
     }
 
     .card {
@@ -39,30 +38,23 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
-    h2, h3 {
-      margin-top: 0;
-    }
+    h2 { margin-top: 0; }
 
     label {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
       gap: 10px;
       margin: 8px 0;
       padding: 10px;
       border-radius: 8px;
       background: rgba(255,255,255,0.02);
-      min-height: 48px;
-      word-break: break-word;
     }
 
     input[type="checkbox"] {
       transform: scale(1.2);
-      flex-shrink: 0;
     }
 
-    input[type="text"],
-    select {
+    input[type="text"], select {
       width: 100%;
       padding: 12px;
       background: #1f2937;
@@ -77,10 +69,9 @@
       background: #1f2937;
       color: #e5e7eb;
       border: none;
-      padding: 12px 14px;
+      padding: 12px;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 10px;
       width: 100%;
       font-size: 16px;
     }
@@ -95,7 +86,6 @@
       border: 1px solid #374151;
       padding: 4px 10px;
       width: auto;
-      min-width: 40px;
     }
 
     .crossed {
@@ -108,7 +98,6 @@
       font-weight: bold;
     }
 
-    /* hiding spot colours */
     .hs1 span { color: #22c55e; }
     .hs2 span { color: #3b82f6; }
     .hs3 span { color: #f59e0b; }
@@ -131,38 +120,35 @@
       margin-top: 2rem;
     }
 
-    /* MOBILE */
-    @media (max-width: 768px) {
-      .container {
-        padding: 0.75rem;
-      }
+    /* 🔋 WAKE LOCK BUTTON */
+    #wakeLockBtn {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 420px;
+      z-index: 9999;
+      background: #1f2937;
+      border: 1px solid #374151;
+    }
 
-      .card {
-        padding: 1rem;
-      }
+    #wakeLockBtn.active {
+      background: #22c55e;
+      color: #0f172a;
+      font-weight: bold;
+    }
 
-      label {
-        font-size: 0.95rem;
-        align-items: flex-start;
-      }
-
-      button {
-        font-size: 15px;
+    @media (min-width: 769px) {
+      #wakeLockBtn {
+        display: none;
       }
     }
 
-    /* SMALL PHONES */
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-      }
-
-      label {
-        font-size: 0.9rem;
+    @media (max-width: 768px) {
+      .container {
+        padding: 0.75rem;
+        padding-bottom: 100px;
       }
     }
   </style>
@@ -183,12 +169,7 @@
 
     <button onclick="resetObjectives()">New Game (Reset)</button>
 
-    <input
-      type="text"
-      id="objectiveSearch"
-      placeholder="Search objectives..."
-      oninput="filterObjectives()"
-    >
+    <input type="text" id="objectiveSearch" placeholder="Search objectives..." oninput="filterObjectives()">
 
     <div id="objectiveCounter">Selected: 0 / 3</div>
     <div id="objectiveList"></div>
@@ -220,7 +201,62 @@
   <p>© 2026 Phasmophobia Tracker</p>
 </footer>
 
+<!-- 🔋 WAKE LOCK BUTTON -->
+<button id="wakeLockBtn" onclick="toggleWakeLock()">
+  🔋 Keep Screen On: OFF
+</button>
+
 <script>
+  // ================= WAKE LOCK =================
+  let wakeLock = null;
+  let wakeLockActive = false;
+
+  async function toggleWakeLock() {
+    const btn = document.getElementById("wakeLockBtn");
+
+    if (!("wakeLock" in navigator)) {
+      alert("Wake Lock not supported on this device/browser.");
+      return;
+    }
+
+    try {
+      if (!wakeLockActive) {
+        wakeLock = await navigator.wakeLock.request("screen");
+        wakeLockActive = true;
+
+        btn.classList.add("active");
+        btn.textContent = "🔋 Keep Screen On: ON";
+
+        wakeLock.addEventListener("release", () => {
+          wakeLockActive = false;
+          btn.classList.remove("active");
+          btn.textContent = "🔋 Keep Screen On: OFF";
+        });
+
+      } else {
+        await wakeLock.release();
+        wakeLock = null;
+        wakeLockActive = false;
+
+        btn.classList.remove("active");
+        btn.textContent = "🔋 Keep Screen On: OFF";
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  document.addEventListener("visibilitychange", async () => {
+    if (wakeLockActive && document.visibilityState === "visible") {
+      try {
+        wakeLock = await navigator.wakeLock.request("screen");
+      } catch (e) {}
+    }
+  });
+
+  // ================= EXISTING LOGIC =================
+
   const evidence = [
     "EMF Level 5",
     "Spirit Box",
@@ -308,17 +344,13 @@
       return;
     }
 
-    if (cb.checked) label.classList.add('objDone');
-    else label.classList.remove('objDone');
+    cb.checked ? label.classList.add('objDone') : label.classList.remove('objDone');
 
     document.querySelectorAll('#objectiveList label').forEach(lbl => {
-      const checkbox = lbl.querySelector('input');
+      const box = lbl.querySelector('input');
 
-      if (checked.length === 3 && !checkbox.checked) {
-        lbl.style.display = 'none';
-      } else {
-        lbl.style.display = 'flex';
-      }
+      lbl.style.display =
+        (checked.length === 3 && !box.checked) ? 'none' : 'flex';
     });
 
     updateObjectiveCounter();
@@ -336,21 +368,18 @@
     const search = document.getElementById('objectiveSearch').value.toLowerCase();
 
     document.querySelectorAll('#objectiveList label').forEach(label => {
-      const checkbox = label.querySelector('input');
+      const box = label.querySelector('input');
       const text = label.textContent.toLowerCase();
 
-      if (checkbox.checked) {
+      if (box.checked) {
         label.style.display = 'flex';
         return;
       }
 
       const checkedCount = document.querySelectorAll('#objectiveList input:checked').length;
 
-      if (checkedCount === 3) {
-        label.style.display = 'none';
-      } else {
-        label.style.display = text.includes(search) ? 'flex' : 'none';
-      }
+      label.style.display =
+        checkedCount === 3 ? 'none' : (text.includes(search) ? 'flex' : 'none');
     });
   }
 
@@ -363,7 +392,6 @@
     });
 
     document.getElementById('objectiveSearch').value = '';
-
     updateObjectiveCounter();
   }
 
