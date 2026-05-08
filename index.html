@@ -2,383 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Phasmophobia Tracker</title>
 
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #090d16;
-      --panel: #111827;
-      --panel-2: #172033;
-      --line: #2a3548;
-      --text: #eef2f7;
-      --muted: #9ca8ba;
-      --green: #22c55e;
-      --green-soft: rgba(34, 197, 94, 0.12);
-      --red: #ef4444;
-      --red-soft: rgba(239, 68, 68, 0.13);
-      --amber: #f59e0b;
-      --blue: #38bdf8;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      margin: 0;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.14), transparent 28rem),
-        linear-gradient(145deg, #070b13 0%, var(--bg) 52%, #141824 100%);
-      color: var(--text);
       font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+      overflow-x: hidden;
     }
+
+    * { box-sizing: border-box; }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--line);
-      background: rgba(7, 11, 19, 0.92);
-      backdrop-filter: blur(14px);
-    }
-
-    .topbar {
-      width: min(1120px, 100%);
-      margin: 0 auto;
-      padding: 0.95rem 1rem;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
-    }
-
-    h1 {
-      margin-bottom: 0.15rem;
-      font-size: clamp(1.45rem, 5vw, 2.15rem);
-      letter-spacing: 0;
-    }
-
-    header p,
-    .hint,
-    .empty {
-      color: var(--muted);
-    }
-
-    header p {
-      margin-bottom: 0;
-      line-height: 1.35;
-    }
-
-    .topActions {
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
+      background: #020617;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #1f2933;
     }
 
     .container {
-      width: min(1120px, 100%);
-      margin: 0 auto;
+      max-width: 900px;
+      margin: auto;
       padding: 1rem;
-      padding-bottom: 6.5rem;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-      gap: 1rem;
-      align-items: start;
-    }
-
-    .mainStack {
-      display: grid;
-      gap: 1rem;
+      padding-bottom: 90px;
     }
 
     .card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(17, 24, 39, 0.94);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
-      padding: 1rem;
-    }
-
-    .cardHeader {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-bottom: 0.9rem;
+      background: #111827;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
     h2 {
-      margin-bottom: 0.25rem;
-      font-size: 1.25rem;
+      margin-top: 0;
     }
 
-    h3 {
-      margin-bottom: 0.55rem;
-      font-size: 1rem;
-    }
-
-    .hint {
-      margin-bottom: 0;
-      font-size: 0.94rem;
-      line-height: 1.35;
-    }
-
-    button,
-    input[type="text"],
-    select {
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: var(--panel-2);
-      color: var(--text);
-      font: inherit;
-    }
-
-    button {
-      padding: 0.65rem 0.85rem;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    button:hover {
-      border-color: #45546d;
-      background: #202b42;
-    }
-
-    button:focus-visible,
-    input:focus-visible,
-    select:focus-visible {
-      outline: 3px solid rgba(56, 189, 248, 0.35);
-      outline-offset: 2px;
-    }
-
-    .resetBtn {
-      border-color: rgba(239, 68, 68, 0.48);
-      background: #7f1d1d;
-      color: #fee2e2;
-    }
-
-    .resetBtn:hover {
-      background: #991b1b;
-    }
-
-    .smallBtn {
-      min-height: 36px;
-      padding: 0.42rem 0.65rem;
-      font-size: 0.92rem;
-    }
-
-    .search,
-    select {
-      width: 100%;
-      padding: 0.7rem 0.8rem;
-      margin-bottom: 0.75rem;
-      font-size: 16px;
-    }
-
-    .counter {
-      display: inline-flex;
-      min-width: 108px;
-      justify-content: center;
+    label {
+      display: flex;
       align-items: center;
-      padding: 0.42rem 0.65rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      font-weight: 700;
-      white-space: nowrap;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
     }
 
-    .counter.complete {
-      border-color: rgba(34, 197, 94, 0.55);
-      background: var(--green-soft);
-      color: #86efac;
-    }
-
-    .list {
-      display: grid;
-      gap: 0.45rem;
-    }
-
-    label.item {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 0.72rem;
-      align-items: center;
-      min-height: 46px;
-      padding: 0.55rem 0.65rem;
-      border: 1px solid transparent;
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.028);
-    }
-
-    label.item:hover {
-      border-color: #334158;
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    input[type="checkbox"] {
-      width: 1.15rem;
-      height: 1.15rem;
-      accent-color: var(--green);
-    }
-
-    .item span {
+    label span {
       min-width: 0;
       line-height: 1.35;
     }
 
-    .locked {
-      opacity: 0.42;
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      flex: 0 0 auto;
     }
 
-    .done span {
-      color: #86efac;
-      font-weight: 700;
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #1f2937;
+      color: #e5e7eb;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
 
-    .ruledOut span {
-      color: #fca5a5;
-      opacity: 0.75;
-      text-decoration: line-through;
+    button {
+      background: #1f2937;
+      color: #e5e7eb;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #374151;
+    }
+
+    .resetBtn {
+      background: #991b1b;
+      margin-bottom: 10px;
+      position: sticky;
+      top: 10px;
+      z-index: 10;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+    }
+
+    .resetBtn:hover {
+      background: #7f1d1d;
+    }
+
+    .crossBtn,
+    .completeBtn {
+      margin-left: auto;
+      border: 1px solid #374151;
+      width: auto;
+      flex: 0 0 auto;
     }
 
     .crossBtn {
-      width: 36px;
-      min-height: 36px;
-      padding: 0;
-      color: var(--muted);
       background: transparent;
-    }
-
-    .crossBtn.active {
-      border-color: rgba(239, 68, 68, 0.58);
-      background: var(--red-soft);
-      color: #fecaca;
+      padding: 4px 10px;
     }
 
     .completeBtn {
-      min-height: 36px;
-      padding: 0.35rem 0.55rem;
-      color: var(--muted);
-      background: transparent;
+      padding: 6px 10px;
+      font-size: 14px;
       white-space: nowrap;
     }
 
     .completeBtn.active {
-      border-color: rgba(34, 197, 94, 0.58);
-      background: var(--green-soft);
-      color: #86efac;
+      background: #22c55e;
+      border-color: #22c55e;
+      color: #0f172a;
+      font-weight: bold;
     }
 
-    .objectiveComplete span {
+    .crossed {
       text-decoration: line-through;
-      opacity: 0.72;
+      opacity: 0.5;
     }
 
-    .summary {
-      position: sticky;
-      top: 92px;
+    .objDone span {
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+    .objComplete span {
+      text-decoration: line-through;
+      opacity: 0.65;
     }
 
     .summaryBlock {
-      border-top: 1px solid var(--line);
-      padding-top: 0.8rem;
-      margin-top: 0.8rem;
+      border-top: 1px solid #1f2933;
+      padding-top: 12px;
+      margin-top: 12px;
     }
 
-    .summaryBlock:first-of-type {
-      margin-top: 0;
+    .summaryBlock:first-child {
+      border-top: none;
       padding-top: 0;
-      border-top: 0;
+      margin-top: 0;
+    }
+
+    .summaryBlock h3 {
+      margin: 0 0 8px;
     }
 
     .pillList {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem;
+      gap: 8px;
     }
 
     .pill {
-      display: inline-flex;
-      align-items: center;
-      max-width: 100%;
-      min-height: 32px;
-      border: 1px solid var(--line);
+      border: 1px solid #374151;
       border-radius: 999px;
-      padding: 0.35rem 0.58rem;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--muted);
-      font-size: 0.91rem;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.03);
+      color: #cbd5e1;
+      font-size: 14px;
       line-height: 1.25;
     }
 
     .pill.good {
-      border-color: rgba(34, 197, 94, 0.52);
+      border-color: rgba(34, 197, 94, 0.55);
       color: #86efac;
     }
 
     .pill.bad {
-      border-color: rgba(239, 68, 68, 0.52);
+      border-color: rgba(239, 68, 68, 0.55);
       color: #fca5a5;
     }
 
+    .summaryObjective {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid #374151;
+    }
+
+    .summaryObjective span {
+      flex: 1;
+      min-width: 0;
+      line-height: 1.35;
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+    .summaryObjective.done span {
+      text-decoration: line-through;
+      opacity: 0.65;
+    }
+
     .empty {
-      margin-bottom: 0;
+      margin: 0;
+      color: #9ca3af;
       line-height: 1.4;
     }
 
-    .hs1 span { color: #86efac; }
-    .hs2 span { color: #93c5fd; }
-    .hs3 span { color: #fcd34d; }
-    .hs4 span { color: #fca5a5; }
-    .hs5 span { color: #d8b4fe; }
-    .hs6 span { color: #67e8f9; }
-    .hs7 span { color: #fdba74; }
-    .hs8 span { color: #f9a8d4; }
+    .hs1 span { color: #22c55e; }
+    .hs2 span { color: #3b82f6; }
+    .hs3 span { color: #f59e0b; }
+    .hs4 span { color: #ef4444; }
+    .hs5 span { color: #a855f7; }
+    .hs6 span { color: #06b6d4; }
+    .hs7 span { color: #f97316; }
+    .hs8 span { color: #ec4899; }
 
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 1rem;
-      background: rgba(7, 11, 19, 0.88);
-      color: var(--muted);
-      text-align: center;
+    .pill.hs1 { color: #22c55e; }
+    .pill.hs2 { color: #3b82f6; }
+    .pill.hs3 { color: #f59e0b; }
+    .pill.hs4 { color: #ef4444; }
+    .pill.hs5 { color: #a855f7; }
+    .pill.hs6 { color: #06b6d4; }
+    .pill.hs7 { color: #f97316; }
+    .pill.hs8 { color: #ec4899; }
+
+    #objectiveCounter {
+      font-weight: bold;
+      margin: 10px 0;
     }
 
-    footer p {
-      margin-bottom: 0;
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #020617;
+      border-top: 1px solid #1f2933;
+      margin-top: 2rem;
     }
 
     #wakeLockBtn {
       position: fixed;
-      right: 12px;
       bottom: 12px;
-      left: 12px;
-      z-index: 30;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
       max-width: 420px;
-      margin: 0 auto;
-      border-color: #45546d;
-      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      z-index: 9999;
+      background: #1f2937;
+      border: 1px solid #374151;
     }
 
     #wakeLockBtn.active {
-      border-color: rgba(34, 197, 94, 0.55);
-      background: var(--green);
-      color: #07130c;
+      background: #22c55e;
+      color: #0f172a;
+      font-weight: bold;
     }
 
     @media (min-width: 769px) {
@@ -387,47 +270,15 @@
       }
     }
 
-    @media (max-width: 860px) {
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .topActions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
+    @media (max-width: 768px) {
       .container {
-        grid-template-columns: 1fr;
+        padding: 0.75rem;
+        padding-bottom: 100px;
       }
 
-      .summary {
-        position: static;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .topbar,
-      .container {
-        padding-right: 0.75rem;
-        padding-left: 0.75rem;
-      }
-
-      .card {
-        padding: 0.85rem;
-      }
-
-      .cardHeader {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .counter {
-        justify-self: start;
-      }
-
-      label.item {
-        grid-template-columns: auto minmax(0, 1fr) auto;
+      .completeBtn {
+        padding: 6px 8px;
+        font-size: 13px;
       }
     }
   </style>
@@ -435,77 +286,49 @@
 
 <body>
   <header>
-    <div class="topbar">
-      <div>
-        <h1>Phasmophobia Tracker</h1>
-        <p>Track evidence, objectives, and hiding spots during a run.</p>
-      </div>
-      <div class="topActions">
-        <button type="button" onclick="resetRun()">New Run</button>
-        <button type="button" class="resetBtn" onclick="clearSavedRun()">Clear Saved</button>
-      </div>
-    </div>
+    <h1>Phasmophobia Tracker</h1>
+    <p>Track evidence, objectives, and hiding spots</p>
   </header>
 
-  <main class="container">
-    <div class="mainStack">
-      <section class="card" aria-labelledby="objectivesTitle">
-        <div class="cardHeader">
-          <div>
-            <h2 id="objectivesTitle">Objectives</h2>
-            <p class="hint">Choose up to three. Once three are selected, the rest are locked.</p>
-          </div>
-          <div id="objectiveCounter" class="counter">0 / 3</div>
-        </div>
+  <div class="container">
+    <div class="card">
+      <h2>Objectives</h2>
 
-        <input
-          type="text"
-          id="objectiveSearch"
-          class="search"
-          placeholder="Search objectives..."
-          oninput="renderObjectives()"
-        />
+      <button class="resetBtn" onclick="resetObjectives()">
+        New Game (Reset)
+      </button>
 
-        <div id="objectiveList" class="list"></div>
-      </section>
+      <input
+        type="text"
+        id="objectiveSearch"
+        placeholder="Search objectives..."
+        oninput="filterObjectives()"
+      />
 
-      <section class="card" aria-labelledby="hidingTitle">
-        <div class="cardHeader">
-          <div>
-            <h2 id="hidingTitle">Hiding Spots</h2>
-            <p class="hint">Switch houses and mark the spots that are open.</p>
-          </div>
-        </div>
-
-        <select id="houseSelect" onchange="changeHouse()">
-          <option value="tanglewood">6 Tanglewood Drive</option>
-          <option value="edgefield">42 Edgefield Road</option>
-          <option value="ridgeview">10 Ridgeview Court</option>
-          <option value="willow">13 Willow Street</option>
-        </select>
-
-        <div id="hidingSpotList" class="list"></div>
-      </section>
-
-      <section class="card" aria-labelledby="evidenceTitle">
-        <div class="cardHeader">
-          <div>
-            <h2 id="evidenceTitle">Evidence</h2>
-            <p class="hint">Tick confirmed evidence, or use X to rule it out.</p>
-          </div>
-        </div>
-
-        <div id="evidenceList" class="list"></div>
-      </section>
+      <div id="objectiveCounter">Selected: 0 / 3</div>
+      <div id="objectiveList"></div>
     </div>
 
-    <aside class="card summary" aria-labelledby="summaryTitle">
-      <div class="cardHeader">
-        <div>
-          <h2 id="summaryTitle">Run Summary</h2>
-          <p class="hint">Saved automatically on this device.</p>
-        </div>
-      </div>
+    <div class="card">
+      <h2>Hiding Spots</h2>
+
+      <select id="houseSelect" onchange="renderHidingSpots()">
+        <option value="tanglewood">6 Tanglewood Drive</option>
+        <option value="edgefield">42 Edgefield Road</option>
+        <option value="ridgeview">10 Ridgeview Court</option>
+        <option value="willow">13 Willow Street</option>
+      </select>
+
+      <div id="hidingSpotList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Evidence</h2>
+      <div id="evidenceList"></div>
+    </div>
+
+    <div class="card">
+      <h2>Run Summary</h2>
 
       <div class="summaryBlock">
         <h3>Objectives</h3>
@@ -513,30 +336,63 @@
       </div>
 
       <div class="summaryBlock">
-        <h3>Evidence</h3>
-        <div id="summaryEvidence" class="pillList"></div>
-      </div>
-
-      <div class="summaryBlock">
         <h3>Open Hiding Spots</h3>
         <div id="summaryHiding" class="pillList"></div>
       </div>
-    </aside>
-  </main>
+    </div>
+  </div>
 
   <footer>
-    <p>Phasmophobia Tracker</p>
+    <p>© 2026 Phasmophobia Tracker</p>
   </footer>
 
-  <button id="wakeLockBtn" type="button" onclick="toggleWakeLock()">
+  <button id="wakeLockBtn" onclick="toggleWakeLock()">
     Keep Screen On: OFF
   </button>
 
   <script>
-    const storageKey = 'phasmophobiaTracker.latestRun';
-
     let wakeLock = null;
-    let wakeLockWanted = false;
+    let wakeLockActive = false;
+
+    async function toggleWakeLock() {
+      const btn = document.getElementById('wakeLockBtn');
+
+      if (!('wakeLock' in navigator)) {
+        alert('Wake Lock not supported on this device/browser.');
+        return;
+      }
+
+      try {
+        if (!wakeLockActive) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeLockActive = true;
+          btn.classList.add('active');
+          btn.textContent = 'Keep Screen On: ON';
+
+          wakeLock.addEventListener('release', () => {
+            wakeLockActive = false;
+            btn.classList.remove('active');
+            btn.textContent = 'Keep Screen On: OFF';
+          });
+        } else {
+          await wakeLock.release();
+          wakeLock = null;
+          wakeLockActive = false;
+          btn.classList.remove('active');
+          btn.textContent = 'Keep Screen On: OFF';
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLockActive && document.visibilityState === 'visible') {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+        } catch (e) {}
+      }
+    });
 
     const evidence = [
       'EMF Level 5',
@@ -546,6 +402,62 @@
       'Fingerprints',
       'D.O.T.S Projector'
     ];
+
+    const confirmedEvidence = new Set();
+    const ruledOutEvidence = new Set();
+
+    function renderEvidence() {
+      const container = document.getElementById('evidenceList');
+      container.innerHTML = '';
+
+      evidence.forEach(item => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        const span = document.createElement('span');
+        const crossBtn = document.createElement('button');
+
+        checkbox.type = 'checkbox';
+        checkbox.checked = confirmedEvidence.has(item);
+        span.textContent = item;
+        crossBtn.className = 'crossBtn';
+        crossBtn.textContent = 'X';
+
+        if (ruledOutEvidence.has(item)) {
+          span.classList.add('crossed');
+        }
+
+        checkbox.onchange = () => {
+          if (checkbox.checked) {
+            confirmedEvidence.add(item);
+            ruledOutEvidence.delete(item);
+          } else {
+            confirmedEvidence.delete(item);
+          }
+
+          renderEvidence();
+          renderSummary();
+        };
+
+        crossBtn.onclick = event => {
+          event.preventDefault();
+
+          if (ruledOutEvidence.has(item)) {
+            ruledOutEvidence.delete(item);
+          } else {
+            ruledOutEvidence.add(item);
+            confirmedEvidence.delete(item);
+          }
+
+          renderEvidence();
+          renderSummary();
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        label.appendChild(crossBtn);
+        container.appendChild(label);
+      });
+    }
 
     const objectives = [
       'Capture a photo of the ghost',
@@ -564,6 +476,117 @@
       'Repel the ghost with a smudge stick while it is chasing someone',
       'Detect paranormal sound with a parabolic microphone'
     ];
+
+    const selectedObjectives = new Set();
+    const completedObjectives = new Set();
+    const selectedHidingSpots = new Set();
+
+    function renderObjectives() {
+      const container = document.getElementById('objectiveList');
+      const search = document.getElementById('objectiveSearch').value.toLowerCase();
+      container.innerHTML = '';
+
+      const orderedObjectives = search
+        ? objectives
+        : [
+            ...Array.from(selectedObjectives).filter(obj => objectives.includes(obj)),
+            ...objectives.filter(obj => !selectedObjectives.has(obj))
+          ];
+
+      orderedObjectives.forEach(obj => {
+        const isSelected = selectedObjectives.has(obj);
+
+        if (search && isSelected) return;
+        if (!isSelected && selectedObjectives.size === 3) return;
+        if (search && !obj.toLowerCase().includes(search)) return;
+
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        const span = document.createElement('span');
+
+        checkbox.type = 'checkbox';
+        checkbox.checked = isSelected;
+        span.textContent = obj;
+
+        if (isSelected) label.classList.add('objDone');
+        if (completedObjectives.has(obj)) label.classList.add('objComplete');
+
+        checkbox.onchange = () => {
+          if (checkbox.checked) {
+            if (selectedObjectives.size >= 3) {
+              checkbox.checked = false;
+              return;
+            }
+
+            selectedObjectives.add(obj);
+            document.getElementById('objectiveSearch').value = '';
+          } else {
+            selectedObjectives.delete(obj);
+            completedObjectives.delete(obj);
+          }
+
+          renderObjectives();
+          updateObjectiveCounter();
+          renderSummary();
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+
+        if (isSelected) {
+          const completeBtn = document.createElement('button');
+          completeBtn.className = completedObjectives.has(obj)
+            ? 'completeBtn active'
+            : 'completeBtn';
+          completeBtn.textContent = completedObjectives.has(obj)
+            ? 'Done'
+            : 'Mark Done';
+          completeBtn.onclick = event => {
+            event.preventDefault();
+
+            if (completedObjectives.has(obj)) {
+              completedObjectives.delete(obj);
+            } else {
+              completedObjectives.add(obj);
+            }
+
+            renderObjectives();
+            renderSummary();
+          };
+
+          label.appendChild(completeBtn);
+        }
+
+        container.appendChild(label);
+      });
+
+      updateObjectiveCounter();
+    }
+
+    function filterObjectives() {
+      renderObjectives();
+    }
+
+    function updateObjectiveCounter() {
+      const counter = document.getElementById('objectiveCounter');
+      counter.textContent = 'Selected: ' + selectedObjectives.size + ' / 3';
+      counter.style.color = selectedObjectives.size === 3
+        ? '#22c55e'
+        : '#e5e7eb';
+    }
+
+    function resetObjectives() {
+      selectedObjectives.clear();
+      completedObjectives.clear();
+      selectedHidingSpots.clear();
+      confirmedEvidence.clear();
+      ruledOutEvidence.clear();
+      document.getElementById('objectiveSearch').value = '';
+      renderObjectives();
+      renderHidingSpots();
+      renderEvidence();
+      renderSummary();
+    }
 
     const hidingSpots = {
       tanglewood: [
@@ -587,195 +610,97 @@
       ]
     };
 
-    const state = {
-      house: 'tanglewood',
-      objectives: [],
-      completedObjectives: {},
-      evidence: {},
-      hiding: {}
-    };
-
-    function loadState() {
-      const saved = localStorage.getItem(storageKey);
-      if (!saved) return;
-
-      try {
-        Object.assign(state, JSON.parse(saved));
-      } catch (error) {
-        localStorage.removeItem(storageKey);
-      }
-    }
-
-    function saveState() {
-      localStorage.setItem(storageKey, JSON.stringify(state));
-      renderSummary();
-    }
-
-    function makeItem(text, settings) {
-      const label = document.createElement('label');
-      label.className = 'item';
-      if (settings.className) label.classList.add(settings.className);
-      if (settings.checked) label.classList.add('done');
-      if (settings.locked) label.classList.add('locked');
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = Boolean(settings.checked);
-      checkbox.disabled = Boolean(settings.locked);
-      checkbox.onchange = () => settings.onChange(checkbox);
-
-      const span = document.createElement('span');
-      span.textContent = text;
-
-      label.appendChild(checkbox);
-      label.appendChild(span);
-
-      if (settings.extra) label.appendChild(settings.extra);
-
-      return label;
-    }
-
-    function renderEvidence() {
-      const container = document.getElementById('evidenceList');
-      container.innerHTML = '';
-
-      evidence.forEach(item => {
-        const current = state.evidence[item] || 'unknown';
-        const crossBtn = document.createElement('button');
-        crossBtn.type = 'button';
-        crossBtn.className = current === 'ruledOut' ? 'crossBtn active' : 'crossBtn';
-        crossBtn.textContent = 'X';
-        crossBtn.setAttribute('aria-label', 'Rule out ' + item);
-
-        const label = makeItem(item, {
-          checked: current === 'confirmed',
-          extra: crossBtn,
-          onChange: checkbox => {
-            state.evidence[item] = checkbox.checked ? 'confirmed' : 'unknown';
-            renderEvidence();
-            saveState();
-          }
-        });
-
-        if (current === 'ruledOut') label.classList.add('ruledOut');
-
-        crossBtn.onclick = event => {
-          event.preventDefault();
-          state.evidence[item] = current === 'ruledOut' ? 'unknown' : 'ruledOut';
-          renderEvidence();
-          saveState();
-        };
-
-        container.appendChild(label);
-      });
-    }
-
-    function renderObjectives() {
-      const container = document.getElementById('objectiveList');
-      const search = document.getElementById('objectiveSearch').value.trim().toLowerCase();
-      const selectedCount = state.objectives.length;
-      container.innerHTML = '';
-
-      objectives.forEach(objective => {
-        const checked = state.objectives.includes(objective);
-        const matches = objective.toLowerCase().includes(search);
-
-        if (!checked && selectedCount >= 3) return;
-        if (search && !checked && !matches) return;
-
-        const completeBtn = document.createElement('button');
-        completeBtn.type = 'button';
-        completeBtn.className = state.completedObjectives[objective] ? 'completeBtn active' : 'completeBtn';
-        completeBtn.textContent = state.completedObjectives[objective] ? 'Done' : 'Mark Done';
-        completeBtn.setAttribute('aria-label', 'Mark objective complete');
-        completeBtn.onclick = event => {
-          event.preventDefault();
-          state.completedObjectives[objective] = !state.completedObjectives[objective];
-          renderObjectives();
-          saveState();
-        };
-
-        const item = makeItem(objective, {
-          checked,
-          locked: false,
-          extra: checked ? completeBtn : null,
-          onChange: checkbox => {
-            if (checkbox.checked) {
-              if (state.objectives.length < 3) {
-                state.objectives.push(objective);
-                document.getElementById('objectiveSearch').value = '';
-              }
-            } else {
-              state.objectives = state.objectives.filter(item => item !== objective);
-              delete state.completedObjectives[objective];
-            }
-
-            renderObjectives();
-            saveState();
-          }
-        });
-
-        if (checked && state.completedObjectives[objective]) {
-          item.classList.add('objectiveComplete');
-        }
-
-        container.appendChild(item);
-      });
-
-      updateObjectiveCounter();
-    }
-
-    function updateObjectiveCounter() {
-      const counter = document.getElementById('objectiveCounter');
-      counter.textContent = 'Selected: ' + state.objectives.length + ' / 3';
-      counter.classList.toggle('complete', state.objectives.length === 3);
-    }
-
-    function changeHouse() {
-      state.house = document.getElementById('houseSelect').value;
-      renderHidingSpots();
-      saveState();
-    }
-
     function renderHidingSpots() {
-      const house = state.house;
+      const house = document.getElementById('houseSelect').value;
       const container = document.getElementById('hidingSpotList');
       container.innerHTML = '';
 
       hidingSpots[house].forEach(spot => {
-        const key = house + ':' + spot.text;
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        const span = document.createElement('span');
 
-        const item = makeItem(spot.text, {
-          className: spot.cls,
-          checked: Boolean(state.hiding[key]),
-          onChange: checkbox => {
-            state.hiding[key] = checkbox.checked;
-            renderHidingSpots();
-            saveState();
+        label.className = spot.cls;
+        checkbox.type = 'checkbox';
+        checkbox.checked = selectedHidingSpots.has(house + ':' + spot.text);
+        span.textContent = spot.text;
+        span.style.fontWeight = checkbox.checked ? 'bold' : 'normal';
+
+        checkbox.onchange = () => {
+          const key = house + ':' + spot.text;
+
+          if (checkbox.checked) {
+            selectedHidingSpots.add(key);
+          } else {
+            selectedHidingSpots.delete(key);
           }
-        });
 
-        container.appendChild(item);
+          span.style.fontWeight = checkbox.checked ? 'bold' : 'normal';
+          renderSummary();
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
       });
+
+      renderSummary();
     }
 
     function renderSummary() {
-      renderPills('summaryObjectives', state.objectives, 'No objectives selected yet.', 'good');
+      renderSummaryObjectives();
 
-      const evidenceItems = Object.entries(state.evidence)
-        .filter(([, value]) => value !== 'unknown')
-        .map(([name, value]) => ({
-          text: value === 'confirmed' ? name : 'No ' + name,
-          tone: value === 'confirmed' ? 'good' : 'bad'
-        }));
+      const currentHouse = document.getElementById('houseSelect').value;
+      const hidingSummary = hidingSpots[currentHouse]
+        .filter(spot => selectedHidingSpots.has(currentHouse + ':' + spot.text))
+        .map(spot => ({ text: spot.text, tone: spot.cls }));
 
-      renderMixedPills('summaryEvidence', evidenceItems, 'No evidence marked yet.');
+      renderMixedPills(
+        'summaryHiding',
+        hidingSummary,
+        'No hiding spots marked for this house.'
+      );
+    }
 
-      const spots = hidingSpots[state.house]
-        .filter(spot => state.hiding[state.house + ':' + spot.text])
-        .map(spot => spot.text);
+    function renderSummaryObjectives() {
+      const container = document.getElementById('summaryObjectives');
+      container.innerHTML = '';
 
-      renderPills('summaryHiding', spots, 'No hiding spots marked for this house.', 'good');
+      if (!selectedObjectives.size) {
+        renderEmpty(container, 'No objectives selected yet.');
+        return;
+      }
+
+      Array.from(selectedObjectives).forEach(objective => {
+        const item = document.createElement('div');
+        item.className = completedObjectives.has(objective)
+          ? 'summaryObjective done'
+          : 'summaryObjective';
+
+        const text = document.createElement('span');
+        text.textContent = objective;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = completedObjectives.has(objective)
+          ? 'completeBtn active'
+          : 'completeBtn';
+        button.textContent = completedObjectives.has(objective) ? 'Done' : 'Mark Done';
+        button.onclick = () => {
+          if (completedObjectives.has(objective)) {
+            completedObjectives.delete(objective);
+          } else {
+            completedObjectives.add(objective);
+          }
+
+          renderObjectives();
+          renderSummary();
+        };
+
+        item.appendChild(text);
+        item.appendChild(button);
+        container.appendChild(item);
+      });
     }
 
     function renderPills(id, items, emptyText, tone) {
@@ -819,81 +744,10 @@
       container.appendChild(empty);
     }
 
-    function resetRun() {
-      state.objectives = [];
-      state.completedObjectives = {};
-      state.evidence = {};
-      state.hiding = {};
-      document.getElementById('objectiveSearch').value = '';
-      renderAll();
-      saveState();
-    }
-
-    function clearSavedRun() {
-      localStorage.removeItem(storageKey);
-      resetRun();
-    }
-
-    async function toggleWakeLock() {
-      const button = document.getElementById('wakeLockBtn');
-
-      if (!('wakeLock' in navigator)) {
-        button.textContent = 'Keep Screen On: Not Supported';
-        return;
-      }
-
-      if (wakeLockWanted) {
-        wakeLockWanted = false;
-        if (wakeLock) await wakeLock.release();
-        wakeLock = null;
-        updateWakeLockButton();
-        return;
-      }
-
-      wakeLockWanted = true;
-      await requestWakeLock();
-    }
-
-    async function requestWakeLock() {
-      const button = document.getElementById('wakeLockBtn');
-
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        wakeLock.addEventListener('release', () => {
-          wakeLock = null;
-          updateWakeLockButton();
-        });
-      } catch (error) {
-        wakeLockWanted = false;
-        button.textContent = 'Keep Screen On: Failed';
-      }
-
-      updateWakeLockButton();
-    }
-
-    function updateWakeLockButton() {
-      const button = document.getElementById('wakeLockBtn');
-      const active = Boolean(wakeLockWanted && wakeLock);
-      button.classList.toggle('active', active);
-      button.textContent = active ? 'Keep Screen On: ON' : 'Keep Screen On: OFF';
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLockWanted && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
-
-    function renderAll() {
-      document.getElementById('houseSelect').value = state.house;
-      renderObjectives();
-      renderHidingSpots();
-      renderEvidence();
-      renderSummary();
-    }
-
-    loadState();
-    renderAll();
+    renderEvidence();
+    renderObjectives();
+    renderHidingSpots();
+    renderSummary();
   </script>
 </body>
 </html>
